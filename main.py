@@ -40,16 +40,11 @@ class XML:
 
 
 # check for format test
-"""
+
 test1 = XML()
 texts2 = "<root><li><s>values</s></li></root>"
-texts = "<root><folder><title>Folder One</title><item><title>Item One</title></item><item><title>Item Two</title></item>
-<item><title>Item Three</title></item><folder><title>Folder Two</title><item><title>Item Four</title></item><item><title
->Item Five</title></item><item><title>Item Six</title></item></folder></folder><folder><title>Folder Three</title><item>
-<title>Item Six</title></item><item><title>Item Seven</title></item><item><title>Item Eight</title></item></folder>
-</root>"
-test1.open(texts)
+test1.text = text2
 
 print(test1.checkFormat())
-"""
+
 

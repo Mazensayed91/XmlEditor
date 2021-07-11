@@ -9,11 +9,15 @@ def check_format(text):
                 closing = True
             storing = True
 
-        elif text[i] == '>' or text[i] == ' ':
+        elif (text[i] == '>' or text[i] == ' ') and storing:
             if closing:
                 if current_tag[1:len(current_tag)] != stored.pop():
-                    return i
+                    return i - len(current_tag) + 1
+                elif text[i] == ' ':
+                    return i - len(current_tag) + 1
             else:
+                if (text[i-1] == '<'):
+                    return i-1
                 stored.append(current_tag)
             current_tag = ""
             storing = False
