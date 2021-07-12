@@ -16,7 +16,7 @@ def check_format(text):
                 elif text[i] == ' ':
                     return i - len(current_tag) + 1
             else:
-                if (text[i-1] == '<'):
+                if text[i-1] == '<':
                     return i-1
                 stored.append(current_tag)
             current_tag = ""

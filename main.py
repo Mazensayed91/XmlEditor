@@ -18,7 +18,11 @@ class XML:
         pass
 
     def xml_to_json(self):
-        pass
+
+        obj = XmlToJson(self.text)
+        obj.xml_to_json()
+        print(obj.json)
+        to_json(obj.json)
 
     def compress(self):
         pass
@@ -43,8 +47,7 @@ class XML:
 
 test1 = XML()
 texts2 = "<root><li><s>values</s></li></root>"
-test1.text = text2
-
-print(test1.checkFormat())
+test1.text = texts2
+test1.xml_to_json()
 
 
