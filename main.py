@@ -1,33 +1,43 @@
 from imports import *
 import struct
-import endecrypt
+import io
+# import endecrypt
 
 
 class XML:
     def __init__(self):
         self.text = ""
+        self.path = ""
 
-    def open(self):
-        pass
+    def open(self, path):
+        self.path = path
+        self.text = read_xml(path)
 
     def save(self):
-        pass
+        write_xml(self.path, self.text)
 
-    def save_as(self):
-        pass
+    def save_as(self, path, option):
+        if option == 'Compressed':
+            write_xml(path, self.compress())
+        elif option == 'JSON':
+            to_json(self.xml_to_json(), path)
+        else:
+            write_xml(path, self.text)
 
     def prettify(self):
-        pass
+        self.text = prettify_xml(self.text)
 
     def xml_to_json(self):
 
         obj = XmlToJson(self.text)
-        obj.xml_to_json()
-        print(obj.json)
-        to_json(obj.json)
+        return obj.xml_to_json()
+        
 
-    def compress(self, path):
-        return encode(path)
+    def compress(self):
+        return encode(self.text)
+        
+    def decompress(self):
+        pass
 
     def minimize(self):
         """
@@ -47,15 +57,10 @@ class XML:
 
 # check for format test
 
-test1 = XML()
-texts2 = "<root><li><s>values</s></li></root>"
-# test1.text = texts2
-# test1.xml_to_json()
-# print(test1.compress())
-#xml = read_xml('data.adj.xml')
-#test1.text = xml
-test1.compress('data.xml')
-print(decode('s'))
+XML1 = XML()
+XML1.open("data.adj.xml")
+XML1.save_as("test.bin",'JSON')
+# write_xml("test2_bin.txt", decode("test.bin"))
 
 
 

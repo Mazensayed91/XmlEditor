@@ -13,12 +13,13 @@ class XmlToJson:
 
     def clean(self):
         xml_minified = minify_xml(self.xml)
-        xml_comments_removed = remove_comments(xml_minified)
-        self.xml = xml_comments_removed
+        self.xml = remove_comments(xml_minified)
+        self.xml = remove_intro(self.xml)
 
     def xml_to_json(self):
         self.clean()
         self.xml_json(self.json)
+        return self.json
 
     def xml_json(self, json, t_name=None):
 
@@ -50,7 +51,7 @@ class XmlToJson:
 
             if tag_name in json:
                 value = json[tag_name]
-                if ~isinstance(value, list):
+                if (type(value) != list):
                     json[tag_name] = [value]
                 json[tag_name].append(attrs_dict)
             else:
@@ -64,14 +65,12 @@ class XmlToJson:
                     json[tag_name]['#text'] = text_value
                 else:
                     json[tag_name][-1]['#text'] = text_value
-
+            if (type(json[tag_name]) == list) and ((len(list(json[tag_name][-1].keys())) == 1) and ('#text' in json[tag_name][-1])):
+                json[tag_name][-1] = json[tag_name][-1]['#text']
+            elif (len(list(json[tag_name].keys())) == 1) and ('#text' in json[tag_name]):
+                json[tag_name] = json[tag_name]['#text']
             self.xml_json(json[tag_name], tag_name)
+
 
         self.xml_json(json, t_name)
 
-
-xml = """<span>sometextutal!!<a class="url" href="http://www.web2con.com/">text<span class="summary"></span><abbr class="dtstart" title="2005-10-05"></abbr><abbr class="dtend" title="2005-10-08"></abbr><span class="location">sometextual2</span></a></span>"""
-# xml = """<li></li><ui></ui><l></l><li></li>"""
-obj = XmlToJson(xml)
-obj.xml_to_json()
-print(obj.json)

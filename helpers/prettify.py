@@ -1,7 +1,7 @@
 import re
 
 
-def prettify(xml):
+def prettify_xml(xml):
     xml2 = ""
     counter = -1
     edit_flag = False
