@@ -65,11 +65,11 @@ class XmlToJson:
                     json[tag_name]['#text'] = text_value
                 else:
                     json[tag_name][-1]['#text'] = text_value
+            self.xml_json(json[tag_name], tag_name)
             if (type(json[tag_name]) == list) and ((len(list(json[tag_name][-1].keys())) == 1) and ('#text' in json[tag_name][-1])):
                 json[tag_name][-1] = json[tag_name][-1]['#text']
             elif (len(list(json[tag_name].keys())) == 1) and ('#text' in json[tag_name]):
                 json[tag_name] = json[tag_name]['#text']
-            self.xml_json(json[tag_name], tag_name)
 
 
         self.xml_json(json, t_name)
