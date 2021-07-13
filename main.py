@@ -1,4 +1,6 @@
 from imports import *
+import struct
+import endecrypt
 
 
 class XML:
@@ -24,8 +26,8 @@ class XML:
         print(obj.json)
         to_json(obj.json)
 
-    def compress(self):
-        pass
+    def compress(self, path):
+        return encode(path)
 
     def minimize(self):
         """
@@ -47,7 +49,13 @@ class XML:
 
 test1 = XML()
 texts2 = "<root><li><s>values</s></li></root>"
-test1.text = texts2
-test1.xml_to_json()
+# test1.text = texts2
+# test1.xml_to_json()
+# print(test1.compress())
+#xml = read_xml('data.adj.xml')
+#test1.text = xml
+test1.compress('data.xml')
+print(decode('s'))
+
 
 

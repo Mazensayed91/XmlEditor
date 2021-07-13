@@ -8,6 +8,12 @@ def remove_comments(xml):
     return xml_modified
 
 
-def to_json(json_dictionary):
-    with open('xml.json', 'w') as f:
+def to_json(json_dictionary, name='xml'):
+    with open(name+'json', 'w') as f:
         json.dump(json_dictionary, f)
+
+
+def read_xml(path):
+    with open(path, 'r') as f:
+        data = f.read()
+    return data

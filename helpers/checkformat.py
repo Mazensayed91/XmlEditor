@@ -25,7 +25,5 @@ def check_format(text):
 
         elif storing:
             current_tag = current_tag + text[i]
-    if len(stored) == 0:
-        return True
-    else:
-        return False
+    return len(stored) == 0
+
