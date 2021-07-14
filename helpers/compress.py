@@ -78,52 +78,30 @@ def encode(xml_data):
     binary_huffman_tree, freq = huffman_compress(xml_data)
     with open('tree.txt', 'w') as convert_file:
      convert_file.write(json.dumps(binary_huffman_tree))
-    print(binary_huffman_tree)
     big_text = ""
-    big_text2 = ""
     encoded_xml = ""
     for char in xml_data:
         big_text += binary_huffman_tree[char]
-        big_text2 += binary_huffman_tree[char]
-        if len(big_text) >=7:
-            encoded_xml += chr(int(big_text[:7], 2))
-            big_text = big_text[7:]
+    #     if len(big_text) >=7:
+    #         encoded_xml += chr(int(big_text[:7], 2))
+    #         big_text = big_text[7:]
     # if len(big_text) != 0:
     #     encoded_xml += chr(int(big_text, 2))
-    print(big_text2)
-    print("\char encoded:\n")
-    print(encoded_xml)
+    for i in range(0, len(big_text), 8):
+        encoded_xml+=(chr(int(big_text[i:i + 8], 2)))
     return encoded_xml
-
-        # if len(big_text) >= 7:
-        #     character = big_text[:7]
-        #     big_text = big_text[7:]
-        #     character = int('0b' + character, 2)
-        #     binary_char = character.to_bytes((character.bit_length() + 7) // 8, 'big').decode()
-        #     small_text += binary_char
-        #     binary_file.write(binary_char)
-
-    # binary_int = int(big_text, 2)
-    # byte_number = binary_int.bit_length() + 7 // 8
-    # binary_array = binary_int.to_bytes(byte_number, "big")
-    # ascii_text = binary_array.decode()
-    # print(ascii_text)
-    #print(big_text)
-
-    # to_json(freq, "freq")
-    #binary_file.close()
 
 
 def decode(path):
-    binary_file = open(path, "r")
-    encoded_data = binary_file.read()
+    encoded_data = read_xml(path)
     # decoded_xml = ""
-    input_string = bin(int.from_bytes(encoded_data.encode(), 'big'))[2::]
+    # input_string = bin(int.from_bytes(encoded_data.encode(), 'big'))[2::]
     # for char in encoded_data:
     #     decoded_xml += bin(ord(char))[2::]
-    for i in range(1, len(input_string)):
-        if i%7 == 0:
-            input_string = input_string[:i] + input_string[i+1::]
+    # for i in range(1, len(input_string)):
+    #     if i%7 == 0:
+    #         input_string = input_string[:i] + input_string[i+1::]
+    input_string = ''.join(format(ord(i), '08b') for i in encoded_data)
 
     with open('tree.txt') as f:
         data = f.read()
@@ -131,8 +109,6 @@ def decode(path):
     chars = list(tree.keys())
     freq = list(tree.values())
     decode_huffman(input_string, chars, freq)
-    print("\nbinary decoded:\n")
-    print(input_string)
     return input_string
 
 def decode_huffman(input_string,  char_store, freq_store):
@@ -147,5 +123,5 @@ def decode_huffman(input_string,  char_store, freq_store):
             if encode == item[1]:
                 decode = decode + item[0]
                 encode = ''
-    print(decode)
+    # print(decode)
     return decode; 
