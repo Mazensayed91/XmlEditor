@@ -31,7 +31,9 @@ class XML:
 
         obj = XmlToJson(self.text)
         return obj.xml_to_json()
-        
+
+    def fix_errors(self):
+        self.text = fix_errors(self.text)
 
     def compress(self):
         return encode(self.text)
