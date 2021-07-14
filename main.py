@@ -59,8 +59,9 @@ class XML:
 
 XML1 = XML()
 XML1.open("data.adj.xml")
-XML1.save_as("test.bin",'JSON')
-# write_xml("test2_bin.txt", decode("test.bin"))
+XML1.minimize()
+XML1.save_as("test.bin",'Compressed')
+write_xml("test2_bin.txt", decode("test.bin"))
 
 
 

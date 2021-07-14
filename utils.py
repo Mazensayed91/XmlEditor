@@ -18,10 +18,10 @@ def to_json(json_dictionary, path='xml'):
 
 
 def read_xml(path):
-    with open(path, 'r') as f:
+    with io.open(path, 'r', encoding='utf-8') as f:
         data = f.read()
     return data
 
 def write_xml(path, data):
-    with io.open(path, 'w', encoding='ascii') as f:
+    with io.open(path, 'w', encoding='utf-8') as f:
         f.write(data)
