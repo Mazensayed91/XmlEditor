@@ -40,7 +40,7 @@ def huffman_compress(xml):
         trie_nodes.remove(right)
         trie_nodes.append(new_node)
 
-    return printNodes(trie_nodes[0]), freq
+    return build_trie(trie_nodes[0]), freq
 
 
 def build_freq_dictionary(xml):
@@ -55,22 +55,15 @@ def build_freq_dictionary(xml):
 dic = {}
 
 
-def printNodes(node, val=''):
-        # huffman code for current node
-        newVal = val + str(node.huff)
+def build_trie(node, val=''):
 
-        # if node is not an edge node
-        # then traverse inside it
         if node.left:
-            printNodes(node.left, newVal)
+            build_trie(node.left, val + str(node.huff))
         if node.right:
-            printNodes(node.right, newVal)
+            build_trie(node.right, val + str(node.huff))
 
-            # if node is edge node then
-            # display its huffman code
         if not node.left and not node.right:
-            dic[node.symbol] = newVal
-            # print(f"{node.symbol} -> {newVal}")
+            dic[node.symbol] = val + str(node.huff)
         return dic
 
 
@@ -108,6 +101,7 @@ def decode(path):
     freq = list(tree.values())
     return decode_huffman(input_string, chars, freq)
     # return input_string
+
 
 def decode_huffman(input_string,  char_store, freq_store):
     #input_string Huffman encoding

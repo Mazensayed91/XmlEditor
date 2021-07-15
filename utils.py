@@ -9,8 +9,8 @@ def remove_comments(xml):
 
 def remove_intro(xml):
 
-    xml_modified = re.sub(r'<\?[\w\s]+\?>', '', xml)
-    return xml
+    xml_modified = re.sub(r'<\?[\w\s\W]+\?>', '', xml)
+    return xml_modified
 
 def to_json(json_dictionary, path='xml'):
     with open(path+'.json', 'w') as f:
