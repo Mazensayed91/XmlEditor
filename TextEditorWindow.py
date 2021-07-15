@@ -1,23 +1,38 @@
 from XmlEditor import Ui_TextEditor
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QFontDialog, QColorDialog
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QTextBlockFormat
+from PyQt5 import QtCore
 from main import XML
+from PyQt5.QtGui import QTextCursor
+from PyQt5.QtCore import Qt
 import logging, threading, functools
 import time
+from colorWrongEditor import *
 
-class EditorWindow(QtWidgets.QMainWindow, Ui_TextEditor):
+
+class EditorWindow(QtWidgets.QMainWindow, Ui_TextEditor, QtWidgets.QTextEdit):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
 
+        self.line_to_be_colored = 1000
+
+        self.highlight_format = QTextBlockFormat()
+        self.highlight_format.setBackground(Qt.red)
+
+        self.format_normal = QTextBlockFormat()
+        self.format_normal.setBackground(Qt.white)
+
         self.xml = XML()
         self.open = 0
         self.textEdit.setFontPointSize(12)
+        self.coloring_flag = 0
         
         self.check()
 
         self.actionOpen.triggered.connect(self.openFile)
+        self.logView = QtWidgets.QTextEdit()
         self.actionClose.triggered.connect(self.closeFile)
         self.actionSave.triggered.connect(self.saveFile)
         self.actionCompressed_file.triggered.connect(self.compressedFile)
@@ -34,19 +49,135 @@ class EditorWindow(QtWidgets.QMainWindow, Ui_TextEditor):
         self.actionFont.triggered.connect(self.font)
         self.actionBackground_Color.triggered.connect(self.backColor)
         self.actionText_Color.triggered.connect(self.color)
-
         self.show()
-    
+
+    def setLineFormat(self, lineNumber, format):
+        """ Sets the highlighting of a given line number in the QTextEdit"""
+        cursor = self.textEdit.textCursor()
+        cursor.select(QTextCursor.Document)
+        cursor.setBlockFormat(self.format_normal)
+
+        cursor = QTextCursor(self.textEdit.document().findBlockByNumber(lineNumber))
+        cursor.setBlockFormat(format)
+
+    def color_2(self):
+        data = self.textEdit.toPlainText()
+
+        self.xml.text = data
+        # print(data)
+        self.textEdit.setText(data)
+        cursor = self.textEdit.textCursor()
+        # Setup the desired format for matches
+        format = QtGui.QTextCharFormat()
+        format.setBackground(QtGui.QBrush(QtGui.QColor("red")))
+        # Setup the regex engine
+        pattern = "Item"
+        regex = QtCore.QRegExp(pattern)
+        # Process the displayed document
+        pos = 0
+        index = regex.indexIn(self.textEdit.toPlainText(), pos)
+        # print("Text", self.textEdit.toPlainText())
+        while index != -1:
+            # print("Iam Here")
+            # Select the matched text and apply the desired format
+            cursor.setPosition(index)
+            cursor.movePosition(QtGui.QTextCursor.EndOfWord, 1)
+            cursor.mergeCharFormat(format)
+            # Move to the next match
+            pos = index + regex.matchedLength()
+            index = regex.indexIn(self.textEdit.toPlainText(), pos)
+
     def check(self):
         data = self.textEdit.toPlainText()
+
         self.xml.text = data
-        begin = self.xml.check_format()
+        begin, text = self.xml.check_format()
+
+        # if not self.coloring_flag and len(self.textEdit.toPlainText()):
+            # print(self.coloring_flag)
+            # self.coloring_flag = True
+
+            # self.textEdit.append("<span style=\" font-size:12pt; font-weight:400; color:#ff0000;\" > hello world </span>")
+
+        # flag = True
+        # if begin > 1:
+        #     self.coloring_flag = True
+        #
+        # if self.coloring_flag:
+        #     layout = QtWidgets.QGridLayout()
+        #     layout.addWidget(self.logView, 3, 3)
+        #     self.setLayout(layout)
+        #     self.textEdit.setText('')
+        #     self.textEdit.append('started appending s')  # append string
+        #     QtWidgets.QApplication.processEvents()  # update gui for pyqt
+        #     print("here")
+        #     self.coloring_flag = False
+        #     first_text = data[:begin]
+        #     text_edit = "<span style=\" font-size:12pt; font-weight:600; color:#ff0000;\" >"
+        #     text_edit += data[begin]
+        #     text_edit += "</span>"
+        #     remaining_text = data[begin+1:]
+        #     total_text = first_text + text_edit + remaining_text
+        #     # print(total_text)
+        #     # self.textEdit.setText(total_text)
+        #     self.textEdit.append(text_edit)
+        #     print(self.textEdit.toPlainText())
+            # self.prettify()
+
+            # self.textEdit.setPlainText(total_text)
         # if type(begin) == int:
         #     cursor = self.textEdit.textCursor()
         #     cursor.movePosition(begin-1)
         #     cursor.movePosition(begin, QtGui.QTextCursor.KeepAnchor)
         #     self.textEdit.setTextBackgroundColor(QColor("red"))
+        # editor = self.textEdit
+        # editor.setStyleSheet("""QPlainTextEdit{
+        # 	font-family:'Consolas';
+        # 	color: #ccc;
+        # 	background-color: #2b2b2b;}""")
+        # highlight = PythonHighlighter(editor.document())
+        # editor.show()
+        # print("1")
+        if text:
+            print(text.split('\n'))
+        if type(begin) == int:
+            print(begin)
+            begin -= 8
+            print(begin)
+            index = 0
+            # fmt = QTextCharFormat()
+            # fmt.setBackground(QColor(255, 0, 0, 50))
+            # print(data.split('\n'))
+            # print(data[begin: begin+5])ban
+            # print(begin)
+            for line_number, line in enumerate(text.split('\n')):
+                for _ in line:
+                    if begin == index:
+                        print("HHHHH")
+                        print(line_number)
+                        self.line_to_be_colored = line_number
+                    # print(index)
+                    index += 1
+                index += 1
+            print('line', self.line_to_be_colored)
+            self.setLineFormat(self.line_to_be_colored-1, self.highlight_format)
+        else:
+            self.setLineFormat(self.line_to_be_colored-1, self.format_normal)
+            # fmt.setUnderlineStyle(QTextCharFormat::WaveUnderline);
+            # self.textEdit.setCurrentCharFormat(fmt)
+            # cursor = QTextCursor(self.textEdit.document())
+            # # set the cursor position (defaults to 0 so this is redundant)
+            # cursor.setPosition(10)
+            # self.textEdit.setTextCursor(cursor)
+            #
+            # # insert text at the cursor
+            # self.textEdit.insertPlainText('your text here')
+        # if not self.coloring_flag:
+        #     self.coloring_flag = True
+        # self.color_2()
+        # self.textEdit.show()
         self.timer = threading.Timer(2, self.check)
+
         self.timer.start()
 
 
@@ -88,7 +219,7 @@ class EditorWindow(QtWidgets.QMainWindow, Ui_TextEditor):
     def compressedFile(self):
         data = self.textEdit.toPlainText()
         self.xml.text = data
-        x = self.xml.check_format()
+        x, _ = self.xml.check_format()
         if (x == True) and (type(x) == bool):
             filename = QFileDialog.getSaveFileName(self, 'Save file', filter="*xml *jon *bin")
             if filename[0]:
@@ -101,7 +232,7 @@ class EditorWindow(QtWidgets.QMainWindow, Ui_TextEditor):
     def jsonFile(self):
         data = self.textEdit.toPlainText()
         self.xml.text = data
-        x = self.xml.check_format()
+        x, _ = self.xml.check_format()
         if (x == True) and (type(x) == bool):
             filename = QFileDialog.getSaveFileName(self, 'Save file', filter="*xml *jon *bin")
             if filename[0]:

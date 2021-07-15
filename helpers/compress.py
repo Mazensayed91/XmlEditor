@@ -2,6 +2,7 @@ import re
 from utils import read_xml, to_json, write_xml
 import json
 
+
 class TrieNode:
     def __init__(self, freq, symbol, left=None, right=None):
         self.freq = freq

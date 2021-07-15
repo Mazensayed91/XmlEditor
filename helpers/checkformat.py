@@ -87,12 +87,14 @@ def check_format(text):
     closing = False
     closing_bracket_missing = False
     current_tag = ""
+    line_number = 0
     i = 0
     for i in range(len(text)):
+
         if text[i] == '<':
             if closing_bracket_missing:
                 # Open tag missing closing bracket
-                return i
+                return i, text
             if text[i + 1] == '/':
                 closing = True
             elif text[i + 1] in ['?', '!']:
@@ -105,14 +107,14 @@ def check_format(text):
             if closing:
                 if current_tag[1:len(current_tag)] != stored.pop():
                     # closing tag different from the open tag
-                    return i - len(current_tag) + 1
+                    return i - len(current_tag) + 1, text
                 elif text[i] == ' ':
                     # closing tag contain space
-                    return i - len(current_tag) + 1
+                    return i - len(current_tag) + 1, text
             else:
                 if text[i - 1] == '<':
                     # open tag starting with space or has no name {"<>" or "< tag>"}
-                    return i - 1
+                    return i - 1, text
                 stored.append(current_tag)
             current_tag = ""
             storing = False
@@ -125,16 +127,16 @@ def check_format(text):
             if text[i-1] == '/':   # self closing tag
                 if text[i-2] == '<':
                     # close tag has no name {"<\>"}
-                    return i-2
+                    return i-2, text
                 stored.pop()
             if closing_bracket_missing:
                 closing_bracket_missing = False
             else:
                 # extra closing bracket
-                return i
+                return i, text
     # remaining not closed tags
     if len(stored) == 0:
-        return True
+        return True, 0
     else:
-        return i
+        return i, text
 
