@@ -20,7 +20,8 @@ def prettify_xml(xml):
         elif xml[i] == '/' and xml[i+1] == '>':
             counter -= 1
         if edit_flag:
-            xml2 += '\n'
+            if xml2 != "":
+                xml2 += '\n'
             for j in range(counter):
                 xml2 += '\t'
             edit_flag = False

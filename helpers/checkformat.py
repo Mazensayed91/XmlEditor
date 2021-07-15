@@ -26,7 +26,7 @@ def fix_errors(text):
 
         elif (text[i] == '>' or text[i] == ' ') and storing:
             if closing:
-                if len(stored) > 1:
+                if (len(stored) > 1) or (i == len(text)-1):
                     last_tag = stored.pop()
                     if current_tag[1:len(current_tag)] != last_tag:
                         # closing tag different from the open tag

@@ -25,6 +25,7 @@ class XML:
             write_xml(path, self.text)
 
     def prettify(self):
+        self.text = self.minimize()
         self.text = prettify_xml(self.text)
 
     def xml_to_json(self):
@@ -59,11 +60,11 @@ class XML:
 
 # check for format test
 
-XML1 = XML()
-XML1.open("data.adj.xml")
-XML1.minimize()
-XML1.save_as("test.bin",'Compressed')
-write_xml("test2_bin.txt", decode("test.bin"))
+# XML1 = XML()
+# XML1.open("data.adj.xml")
+# XML1.minimize()
+# XML1.save_as("test.bin",'Compressed')
+# write_xml("test2_bin.txt", decode("test.bin"))
 
 
 
