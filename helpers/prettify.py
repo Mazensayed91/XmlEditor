@@ -21,7 +21,7 @@ def prettify_xml(xml):
             counter -= 1
         if edit_flag:
             if xml2 != "":
-                xml2 += '\n'
+                 xml2 += '\n'
             for j in range(counter):
                 xml2 += '\t'
             edit_flag = False

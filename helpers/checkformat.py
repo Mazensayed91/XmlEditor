@@ -74,6 +74,8 @@ def fix_errors(text):
         escape_char = False
     # remaining not closed tags
     if len(stored) != 0:
+        if closing_bracket_missing:
+            correct_xml = "</".join(correct_xml.split("</")[:-1])
         for tag in reversed(stored):
             correct_xml = correct_xml + '</' + tag + '>'
     return correct_xml

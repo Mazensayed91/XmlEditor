@@ -74,42 +74,39 @@ def printNodes(node, val=''):
 
 
 def encode(xml_data):
-    #binary_file = open(path, "w")
     binary_huffman_tree, freq = huffman_compress(xml_data)
-    with open('tree.txt', 'w') as convert_file:
-     convert_file.write(json.dumps(binary_huffman_tree))
+    # with open(path+'tree.txt', 'w') as convert_file:
+        # convert_file.write(json.dumps(binary_huffman_tree))
+    tree = json.dumps(binary_huffman_tree)
     big_text = ""
     encoded_xml = ""
     for char in xml_data:
         big_text += binary_huffman_tree[char]
-    #     if len(big_text) >=7:
-    #         encoded_xml += chr(int(big_text[:7], 2))
-    #         big_text = big_text[7:]
-    # if len(big_text) != 0:
-    #     encoded_xml += chr(int(big_text, 2))
     for i in range(0, len(big_text), 8):
         encoded_xml+=(chr(int(big_text[i:i + 8], 2)))
-    return encoded_xml
+    return ''.join([tree, encoded_xml])
 
 
 def decode(path):
     encoded_data = read_xml(path)
-    # decoded_xml = ""
-    # input_string = bin(int.from_bytes(encoded_data.encode(), 'big'))[2::]
-    # for char in encoded_data:
-    #     decoded_xml += bin(ord(char))[2::]
-    # for i in range(1, len(input_string)):
-    #     if i%7 == 0:
-    #         input_string = input_string[:i] + input_string[i+1::]
+    tree = ""
+    i = 0
+    while True:
+        tree+=encoded_data[i]
+        if encoded_data[i] == '}':
+            encoded_data = encoded_data[i+1::]
+            break
+        i+=1
+
     input_string = ''.join(format(ord(i), '08b') for i in encoded_data)
 
-    with open('tree.txt') as f:
-        data = f.read()
-    tree = json.loads(data)
+    # with open(path+'tree.txt') as f:
+    #     data = f.read()
+    tree = json.loads(tree)
     chars = list(tree.keys())
     freq = list(tree.values())
-    decode_huffman(input_string, chars, freq)
-    return input_string
+    return decode_huffman(input_string, chars, freq)
+    # return input_string
 
 def decode_huffman(input_string,  char_store, freq_store):
     #input_string Huffman encoding

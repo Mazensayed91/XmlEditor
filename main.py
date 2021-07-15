@@ -18,14 +18,14 @@ class XML:
 
     def save_as(self, path, option):
         if option == 'Compressed':
-            write_xml(path, self.compress())
+            write_xml(path+'.bin', self.compress())
         elif option == 'JSON':
             to_json(self.xml_to_json(), path)
         else:
-            write_xml(path, self.text)
+            write_xml(path+'.xml', self.text)
 
     def prettify(self):
-        self.text = self.minimize()
+        self.minimize()
         self.text = prettify_xml(self.text)
 
     def xml_to_json(self):
@@ -37,17 +37,19 @@ class XML:
         self.text = fix_errors(self.text)
 
     def compress(self):
+        self.minimize()
         return encode(self.text)
         
-    def decompress(self):
-        pass
+    def decompress(self, path):
+        self.text = decode(path)[:-3]
 
     def minimize(self):
         """
         @rtype:   str
         @return:  the xml file but minimized by removing spaces, new lines and tabs.
         """
-        return minify_xml(self.text)
+        self.text = minify_xml(self.text)
+        
 
     def check_format(self):
         """
@@ -62,7 +64,6 @@ class XML:
 
 # XML1 = XML()
 # XML1.open("data.adj.xml")
-# XML1.minimize()
 # XML1.save_as("test.bin",'Compressed')
 # write_xml("test2_bin.txt", decode("test.bin"))
 

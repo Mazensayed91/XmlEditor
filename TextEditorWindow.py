@@ -46,7 +46,7 @@ class EditorWindow(QtWidgets.QMainWindow, Ui_TextEditor):
         #     cursor.movePosition(begin-1)
         #     cursor.movePosition(begin, QtGui.QTextCursor.KeepAnchor)
         #     self.textEdit.setTextBackgroundColor(QColor("red"))
-        self.timer = threading.Timer(0.3, self.check)
+        self.timer = threading.Timer(2, self.check)
         self.timer.start()
 
 
@@ -60,13 +60,15 @@ class EditorWindow(QtWidgets.QMainWindow, Ui_TextEditor):
     def openFile(self):
         filename = QFileDialog.getOpenFileName(self, 'Open file', '/home', filter="*.xml *.bin")
         if filename[0]:
-            if filename[0][-3:] == 'xml':
+            if filename[0][-4:] == '.xml':
                 self.xml.open(filename[0])
                 self.textEdit.setText(self.xml.text)
                 self.textEdit.setFontPointSize(12)
                 self.open = 1
-            elif filename[0][-3:] == 'bin':
-                self.xml.decompress()
+            elif filename[0][-4:] == '.bin':
+                self.xml.decompress(filename[0])
+                self.xml.fix_errors()
+                self.xml.prettify()
                 self.textEdit.setText(self.xml.text)
                 self.textEdit.setFontPointSize(12)
 
