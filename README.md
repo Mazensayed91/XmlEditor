@@ -8,6 +8,7 @@ wrote using Python. The class includes every method we made for satisfying the r
 ## How to use?
 
 - Clone the project
+- Run this command in your terminal : pip install -r req.txt
 - Run MainGUI.py
 
 ## Operations
