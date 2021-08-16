@@ -1,0 +1,8 @@
+PyQt5==5.15.4	
+PyQt5-Qt5==5.15.2
+PyQt5-sip==12.9.0
+PySide2==5.15.2
+numba==0.53.1
+numpy==1.19.5
+pip==21.2.2
+regex==2021.7.6
